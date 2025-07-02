@@ -2,19 +2,30 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'react-scm-docker-app'
-        CONTAINER_NAME = 'react-scm-container'
+        IMAGE_NAME = 'react-docker-app'
+        CONTAINER_NAME = 'react-docker-container'
     }
 
     stages {
-        stage('Install & Build') {
+        stage('Clone') {
             steps {
-                sh 'npm install'
-                sh 'npx vite build'
+                git branch: 'main', url: 'https://github.com/dranjan755/react-router-context-app.git'
             }
         }
 
-        stage('Clean Docker') {
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Build React App') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Clean Old Container') {
             steps {
                 sh 'docker stop $CONTAINER_NAME || true'
                 sh 'docker rm $CONTAINER_NAME || true'
