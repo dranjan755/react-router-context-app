@@ -2,15 +2,14 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'react-docker-demo'
-        CONTAINER_NAME = 'react-container'
+        IMAGE_NAME = 'react-docker-app'
+        CONTAINER_NAME = 'react-docker-container'
     }
 
     stages {
-        stage('Clone Repo') {
+        stage('Clone') {
             steps {
-                git 'https://github.com/dranjan755/react-router-context-app.git'
-                // or use local repo setup if not pushed yet
+                git branch: 'main', url: 'https://github.com/dranjan755/react-router-context-app.git'
             }
         }
 
@@ -26,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Clean Up Old Container') {
+        stage('Clean Old Container') {
             steps {
                 sh 'docker stop $CONTAINER_NAME || true'
                 sh 'docker rm $CONTAINER_NAME || true'
